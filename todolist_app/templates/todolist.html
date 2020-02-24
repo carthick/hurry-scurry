@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    <title>
+        To dolist Manager- Hurry Scurry
+    </title>
+{% endblock title %}
+
+{% block content %}
+  <div class="container">
+
+  {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+        {{ message }}
+    </div>
+  {% endfor %}
+  </br>
+    <form enctype="multipart/form-data" method="POST">
+    {% csrf_token %}
+      <div class="row">
+        <input type="text" name="task" class="form-control col-lg-4 " id="exampleInputEmail1" placeholder="Add task" aria-describedby="emailHelp">
+        <button type="submit" class="btn btn-primary col-lg-2 offset-md-4">Add Task</button>
+      </div>
+    </form>
+  </br>
+  <table class="table table-bordered">
+  </br>
+    <thead>
+      <tr class="table-primary">
+        <th scope="col">No</th>
+        <th scope="col">Task</th>
+        <th scope="col">Done</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in all_tasks %}
+        {% if task.done %}
+          <tr class="table-success">
+            <td>{{task.id}}</td>
+            <td><del>{{task.task}}</del></td>
+            <td>
+              <div class="row" >
+                <!--This is  commented for the future reference of the checkboxes to be implemented instead of links-->
+                {% comment %} <input class="form-check-input" type="checkbox" value="" id="defaultCheck1"> {% endcomment %}
+                <div class="col-lg-6">
+                  <label class="form-check-label" for="defaultCheck1">
+                    Completed
+                  </label>
+                </div>
+                <div class="col-lg-6">
+                  <a class="nav-link" href="{% url 'update_status' task.id False %}">
+                    <img src="https://img.icons8.com/material-outlined/24/000000/checked-checkbox.png">
+                  </a>
+                </div>
+              </div>
+            </td>
+            <td><a class="nav-link nav-item" href="{% url 'edit_task' task.id %}">EDIT</a></td>
+            <td><a class="nav-link nav-item" href="{% url 'delete_task' task.id %}">Delete</a></td>
+          </tr>
+        {% else %}
+          <tr class="table-secondary">
+            <td>{{task.id}}</td>
+            <td>{{task.task}}</td>
+            <td>
+              <div class="row" >
+                <!--This is  commented for the future reference of the checkboxes to be implemented instead of links-->
+                {% comment %} <input class="form-check-input" type="checkbox" value="" id="defaultCheck1"> {% endcomment %}
+                <div class="col-lg-6">
+                  <label class="form-check-label" for="defaultCheck1">
+                    In progress
+                  </label>
+                </div>
+                <div class="col-lg-6">
+                  <a class="nav-link" href="{% url 'update_status' task.id True %}">
+                    <img src="https://img.icons8.com/material-outlined/24/000000/unchecked-checkbox.png">
+                  </a>
+                </div>
+              </div>
+            </td>
+            <td><a class="nav-link nav-item" href="{% url 'edit_task' task.id %}">EDIT</a></td>
+            <td><a class="nav-link nav-item" href="{% url 'delete_task' task.id %}">Delete</a></td>
+          </tr>
+        {% endif %}
+      {% endfor  %}
+    </tbody>
+  </table>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item ">
+        <a class="page-link" href="?pg-1" tabindex="-1">First</a>
+      </li>
+      {% if all_tasks.has_previous %}
+        <li class="page-item"><a class="page-link" href="?pg={{all_tasks.previous_page_number}}">{{all_tasks.previous_page_number}}</a></li>
+      {% endif %}
+      <li class="page-item"><a class="page-link" href="?pg={{all_tasks.number}}">{{all_tasks.number}}</a></li>
+      {% if all_tasks.has_next %}
+        <li class="page-item"><a class="page-link" href="?pg={{all_tasks.next_page_number}}">{{all_tasks.next_page_number}}</a></li>
+      {% endif %}
+      <li class="page-item">
+        <a class="page-link" href="?pg={{all_tasks.paginator.num_pages}}">Last</a>
+      </li>
+    </ul>
+  </nav>
+  </div>
+{% endblock content %}
