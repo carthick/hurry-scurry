@@ -46,8 +46,8 @@ def about(request):
 
 @login_required
 def delete_task(request, item_id):
+    task = TaskList.objects.get(pk=item_id)
     if task.manage == request.user:
-        task = TaskList.objects.get(pk=item_id)
         task.delete()
     else:
         messages.error(request,('Permission Denied'))
