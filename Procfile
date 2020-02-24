@@ -1,1 +1,1 @@
-web: gunicorn hurrysscurry.wsgi --log-file -
+web: gunicorn hurryscurry.wsgi --log-file -
